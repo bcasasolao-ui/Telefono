@@ -61,7 +61,7 @@
                 <span class="text-xl md:text-2xl font-bold tracking-tight text-white">Tele<span class="text-cyanElectric">Pay</span></span>
             </div>
             
-            <div class="flex gap-2 md:get-3">
+            <div class="flex gap-2 md:gap-3">
                 <button id="btn-vista-usuario" class="bg-cyanElectric text-navy px-3 py-2 md:px-5 md:py-2.5 rounded-full font-bold text-xs md:text-sm transition-all shadow-md shadow-cyanElectric/10 whitespace-nowrap">
                     👤 Usuario
                 </button>
@@ -136,6 +136,8 @@
                                 </label>
                             </div>
 
+                            <div id="debt-info" class="hidden rounded-xl bg-teal-50 border border-teal-100 px-4 py-3"></div>
+
                             <div>
                                 <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">3. Monto a pagar</label>
                                 <div class="grid grid-cols-4 gap-1.5 md:gap-2 mb-3">
@@ -161,8 +163,9 @@
                     <div id="success" class="hidden absolute inset-0 bg-white flex flex-col items-center justify-center p-6 text-center z-20">
                         <div class="w-14 h-14 bg-teal-50 text-cyanElectric rounded-full flex items-center justify-center text-2xl mb-4 font-bold">✓</div>
                         <h3 class="text-xl md:text-2xl font-bold text-navy mb-1">¡Pago Procesado!</h3>
-                        <p class="text-slate-500 text-xs md:text-sm mb-6">Tu saldo se reflejará en unos instantes.</p>
-                        <button onclick="location.reload()" class="text-cyanElectric-dark font-semibold text-xs md:text-sm hover:underline">Realizar otra operación</button>
+                        <p class="text-slate-500 text-xs md:text-sm mb-4">Tu saldo se reflejará en unos instantes.</p>
+                        <dl id="success-receipt" class="w-full max-w-xs text-left text-sm bg-slate-50 rounded-xl border border-slate-100 px-4 py-3 mb-5 space-y-2"></dl>
+                        <button type="button" id="btn-nueva-operacion" class="text-cyanElectric-dark font-semibold text-xs md:text-sm hover:underline">Realizar otra operación</button>
                     </div>
                 </div>
             </div>
@@ -171,11 +174,24 @@
                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                     <div>
                         <h2 class="text-2xl md:text-3xl font-bold text-white tracking-tight">Panel de Control General</h2>
-                        <p class="text-slate-400 text-xs md:text-sm">Historial de transacciones almacenadas en la base de datos de Azure.</p>
+                        <p class="text-slate-400 text-xs md:text-sm">Conciliación global y historial por número vía API Telefonía.</p>
                     </div>
                     <button id="btn-refresh-admin" class="bg-cyanElectric/10 text-cyanElectric border border-cyanElectric/25 px-4 py-2.5 rounded-xl text-xs md:text-sm font-semibold hover:bg-cyanElectric/20 transition-all w-full sm:w-auto text-center">
-                        🔄 Actualizar Historial
+                        🔄 Actualizar datos
                     </button>
+                </div>
+
+                <div id="conciliacion-resumen"></div>
+
+                <p class="text-xs text-slate-500 leading-relaxed">
+                    Las tarjetas superiores vienen de <strong class="text-slate-400">GET /conciliacion</strong> (totales globales).
+                    La tabla usa <strong class="text-slate-400">GET /historial/{número}</strong>: la API no devuelve todas las transacciones en un solo listado; debes buscar el teléfono del pago.
+                </p>
+
+                <div class="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center">
+                    <label class="text-xs font-bold uppercase tracking-wider text-slate-500 shrink-0">Historial por teléfono</label>
+                    <input type="tel" id="admin-phone-search" placeholder="8 dígitos, Enter para buscar" maxlength="8"
+                        class="flex-1 px-4 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-white text-sm focus:ring-2 focus:ring-cyanElectric/50 outline-none">
                 </div>
 
                 <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-2xl overflow-hidden">
@@ -193,7 +209,7 @@
                             <tbody id="tabla-historial-body" class="text-xs md:text-sm divide-y divide-slate-800 text-slate-300">
                                 <tr>
                                     <td colspan="5" class="p-8 text-center text-slate-500 font-medium">
-                                        Presiona "Actualizar Historial" para consultar a Azure.
+                                        Ingresa un número y pulsa Enter, o usa "Actualizar datos".
                                     </td>
                                 </tr>
                             </tbody>
