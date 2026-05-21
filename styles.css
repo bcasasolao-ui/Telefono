@@ -1,0 +1,45 @@
+/* style.css */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Efecto de activación de los botones de Operador (Tigo, Claro, Movistar) */
+.operator-btn.active {
+    border-color: #14b8a6 !important; /* Fuerza el color cian */
+    background-color: #f0fdfa !important; /* Fondo suave cian */
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(20, 184, 166, 0.1);
+}
+
+/* Estado activo para botones de monto */
+.amount-btn.active-amount {
+    background-color: #14b8a6 !important;
+    color: #0f172a !important;
+    border-color: #14b8a6 !important;
+}
+
+/* Animación sutil de entrada para la tarjeta del formulario */
+.dynamic-card {
+    animation: cardEntrance 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Control del Spinner de carga */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.animate-spin {
+    animation: spin 0.8s linear infinite;
+}
