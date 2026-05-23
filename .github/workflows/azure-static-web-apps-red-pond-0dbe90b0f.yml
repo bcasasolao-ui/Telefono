@@ -39,10 +39,11 @@ jobs:
           azure_static_web_apps_api_token: ${{ secrets.AZURE_STATIC_WEB_APPS_API_TOKEN_RED_POND_0DBE90B0F }}
           action: "upload"
           ###### Repository/Build Configurations ######
-          app_location: "/" # Ubicación de tus archivos HTML
-          api_location: "" # Vacío si no usas backend/API
-          output_location: "." # Indica que los archivos listos están en la raíz
-          app_build_command: "" # <--- ¡ESTA ES LA LÍNEA CLAVE PARA TU PROYECTO HTML!
+          app_location: "/" 
+          api_location: "" 
+          output_location: "." 
+          skip_app_build: true      # <--- AGREGA ESTA LÍNEA (Salta el build de Oryx)
+          is_static_export: true    # <--- AGREGA ESTA LÍNEA (Le dice que es HTML puro)
           github_id_token: ${{ steps.idtoken.outputs.result }}
           ###### End of Repository/Build Configurations ######
 
