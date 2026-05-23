@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const ENDPOINTS = {
         clientes: `${API_BASE}/clientes`,
         facturar: `${API_BASE}/facturar`,
-        pagar: `${API_BASE}/pagar`,
+        cobrar: `${API_BASE}/cobrar`,
         consultar: (numero) => `${API_BASE}/consultar/${encodeURIComponent(numero)}`,
         historial: (numero) => `${API_BASE}/historial/${encodeURIComponent(numero)}`,
         conciliacion: `${API_BASE}/conciliacion`,
@@ -401,12 +401,13 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await registrarCliente(numero, selectedOperator);
 
-            const respuestaPago = await apiRequest(ENDPOINTS.pagar, {
+            const respuestaPago = await apiRequest(ENDPOINTS.cobrar, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     numero_telefonico: numero,
                     monto,
+                    tipo_servicio: servicio,
                 }),
             });
 
