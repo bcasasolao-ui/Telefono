@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
         clientes: `${API_BASE}/clientes`,
         facturar: `${API_BASE}/facturar`,
         cobrar: `${API_BASE}/cobrar`,
+        pagar: `${API_BASE}/pagar`,
         consultar: (numero) => `${API_BASE}/consultar/${encodeURIComponent(numero)}`,
         historial: (numero) => `${API_BASE}/historial/${encodeURIComponent(numero)}`,
         conciliacion: `${API_BASE}/conciliacion`,
@@ -352,6 +353,34 @@ document.addEventListener('DOMContentLoaded', () => {
         amountBtns.forEach((b) => b.classList.remove('active-amount'));
     });
 
+    async function ejecutarCobro(numero, monto, servicio) {
+        const payload = {
+            numero_telefonico: numero,
+            monto,
+            tipo_servicio: servicio,
+        };
+
+        try {
+            return await apiRequest(ENDPOINTS.cobrar, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload),
+            });
+        } catch (err) {
+            if (err.status !== 404) throw err;
+
+            // Azure aún sin /cobrar (hasta merge del backend): usar /pagar legacy
+            return await apiRequest(ENDPOINTS.pagar, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    numero_telefonico: numero,
+                    monto,
+                }),
+            });
+        }
+    }
+
     async function registrarCliente(numero, operador) {
         const suscriptor = {
             numero_telefonico: numero,
@@ -401,15 +430,7 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await registrarCliente(numero, selectedOperator);
 
-            const respuestaPago = await apiRequest(ENDPOINTS.cobrar, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    numero_telefonico: numero,
-                    monto,
-                    tipo_servicio: servicio,
-                }),
-            });
+            const respuestaPago = await ejecutarCobro(numero, monto, servicio);
 
             const ultimoPago = {
                 numero,
